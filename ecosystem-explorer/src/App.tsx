@@ -13,20 +13,52 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+import { lazy, Suspense } from "react";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { Header } from "@/components/layout/header";
 import { Footer } from "@/components/layout/footer";
-import { HomePage } from "@/features/home/home-page";
-import { JavaAgentPage } from "@/features/java-agent/java-agent-page";
-import { CollectorPage } from "@/features/collector/collector-page";
-import { CollectorDetailPage } from "@/features/collector/collector-detail-page";
-import { NotFoundPage } from "@/features/not-found/not-found-page";
-import { JavaInstrumentationListPage } from "@/features/java-agent/java-instrumentation-list-page";
-import { JavaConfigurationListPage } from "@/features/java-agent/java-configuration-list-page";
-import { InstrumentationDetailPage } from "@/features/java-agent/instrumentation-detail-page";
-import { ConfigurationBuilderPage } from "@/features/java-agent/configuration/configuration-builder-page";
-import { AboutPage } from "@/features/about/about-page";
 import { isEnabled } from "@/lib/feature-flags";
+
+const HomePage = lazy(() =>
+  import("@/features/home/home-page").then((m) => ({ default: m.HomePage }))
+);
+const JavaAgentPage = lazy(() =>
+  import("@/features/java-agent/java-agent-page").then((m) => ({ default: m.JavaAgentPage }))
+);
+const CollectorPage = lazy(() =>
+  import("@/features/collector/collector-page").then((m) => ({ default: m.CollectorPage }))
+);
+const CollectorDetailPage = lazy(() =>
+  import("@/features/collector/collector-detail-page").then((m) => ({
+    default: m.CollectorDetailPage,
+  }))
+);
+const NotFoundPage = lazy(() =>
+  import("@/features/not-found/not-found-page").then((m) => ({ default: m.NotFoundPage }))
+);
+const JavaInstrumentationListPage = lazy(() =>
+  import("@/features/java-agent/java-instrumentation-list-page").then((m) => ({
+    default: m.JavaInstrumentationListPage,
+  }))
+);
+const JavaConfigurationListPage = lazy(() =>
+  import("@/features/java-agent/java-configuration-list-page").then((m) => ({
+    default: m.JavaConfigurationListPage,
+  }))
+);
+const InstrumentationDetailPage = lazy(() =>
+  import("@/features/java-agent/instrumentation-detail-page").then((m) => ({
+    default: m.InstrumentationDetailPage,
+  }))
+);
+const ConfigurationBuilderPage = lazy(() =>
+  import("@/features/java-agent/configuration/configuration-builder-page").then((m) => ({
+    default: m.ConfigurationBuilderPage,
+  }))
+);
+const AboutPage = lazy(() =>
+  import("@/features/about/about-page").then((m) => ({ default: m.AboutPage }))
+);
 
 export default function App() {
   return (
@@ -34,6 +66,7 @@ export default function App() {
       <div className="bg-background flex min-h-screen flex-col">
         <Header />
         <main className="flex-1 pt-16">
+          <Suspense>
           <Routes>
             <Route path="/" element={<HomePage />} />
             <Route path="/java-agent" element={<JavaAgentPage />} />
@@ -67,6 +100,7 @@ export default function App() {
             <Route path="/about" element={<AboutPage />} />
             <Route path="*" element={<NotFoundPage />} />
           </Routes>
+          </Suspense>
         </main>
         <Footer />
       </div>
